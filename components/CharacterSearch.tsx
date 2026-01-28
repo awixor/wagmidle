@@ -9,17 +9,20 @@ import SearchInput from "@/components/ui/SearchInput";
 import CharacterListItem from "@/components/CharacterListItem";
 import KeyboardHints from "@/components/ui/KeyboardHints";
 
-export default function CharacterSearch() {
+interface CharacterSearchProps {
+  onGuess?: (character: CryptoFigure) => void;
+  disabled?: boolean;
+}
+
+export default function CharacterSearch({
+  onGuess,
+  disabled = false,
+}: CharacterSearchProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
-  const disabled = false;
-
-  const onGuess = (character: CryptoFigure) => {
-    console.log("User guessed:", character.name);
-  };
 
   const filteredCharacters = cryptoFigures.filter(
     (character) =>
@@ -52,7 +55,9 @@ export default function CharacterSearch() {
 
   const handleSelect = (character: CryptoFigure) => {
     if (!disabled) {
-      onGuess(character);
+      if (onGuess) {
+        onGuess(character);
+      }
       setIsOpen(false);
       setSearchQuery("");
       setSelectedIndex(0);
