@@ -12,11 +12,13 @@ import KeyboardHints from "@/components/ui/KeyboardHints";
 interface CharacterSearchProps {
   onGuess?: (character: CryptoFigure) => void;
   disabled?: boolean;
+  guessedIds?: string[];
 }
 
 export default function CharacterSearch({
   onGuess,
   disabled = false,
+  guessedIds = [],
 }: CharacterSearchProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,9 +28,8 @@ export default function CharacterSearch({
 
   const filteredCharacters = cryptoFigures.filter(
     (character) =>
-      character.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      character.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      character.primaryChain.toLowerCase().includes(searchQuery.toLowerCase()),
+      !guessedIds.includes(character.id) &&
+      character.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   useEffect(() => {

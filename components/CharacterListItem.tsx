@@ -39,18 +39,7 @@ export default function CharacterListItem({
 
       <div className="flex-1 text-left">
         <div className="font-semibold text-white">{character.name}</div>
-        <div className="flex items-center gap-2 text-sm text-gray-400">
-          <span className="px-2 py-0.5 bg-purple-500/20 rounded-md text-purple-300">
-            {character.role}
-          </span>
-          <span className="text-gray-500">•</span>
-          <span className="px-2 py-0.5 bg-blue-500/20 rounded-md text-blue-300">
-            {character.primaryChain}
-          </span>
-        </div>
       </div>
-
-      <div className="text-sm text-gray-500">Since {character.yearJoined}</div>
     </button>
   );
 }

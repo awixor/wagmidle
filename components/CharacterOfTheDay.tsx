@@ -56,7 +56,12 @@ export default function CharacterOfTheDay() {
         </div>
       )}
 
-      {!isWon && <CharacterSearch onGuess={handleGuess} />}
+      {!isWon && (
+        <CharacterSearch
+          onGuess={handleGuess}
+          guessedIds={guesses.map((g) => g.character.id)}
+        />
+      )}
 
       <GuessHistory guesses={guesses} />
 
