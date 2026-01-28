@@ -36,8 +36,12 @@ describe("GuessCard", () => {
   it("renders character name and image", () => {
     render(<GuessCard guess={mockGuess} guessNumber={1} />);
 
-    expect(screen.getByText("Vitalik Buterin")).toBeInTheDocument();
-    expect(screen.getByAltText("Vitalik Buterin")).toBeInTheDocument();
+    const heading = screen.getByRole("heading", { name: /vitalik buterin/i });
+    expect(heading).toBeInTheDocument();
+
+    const image = screen.getByAltText(/vitalik buterin/i);
+    expect(image).toBeInTheDocument();
+    expect(image).toHaveAttribute("src", mockGuess.character.imageUrl);
   });
 
   it("renders guess number", () => {

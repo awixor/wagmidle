@@ -26,7 +26,7 @@ export default function GuessCard({
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="flex-1">
+        <div className="flex-1" role="heading" aria-level={1}>
           <div className="font-semibold text-foreground">
             {guess.character.name}
           </div>
