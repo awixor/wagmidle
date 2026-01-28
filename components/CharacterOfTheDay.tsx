@@ -19,12 +19,12 @@ export default function CharacterOfTheDay() {
     if (isWon) return;
 
     const comparison = compareCharacters(guessedCharacter, characterOfTheDay);
-
     const guessResult: GuessResult = {
       character: guessedCharacter,
       comparison,
       timestamp: new Date(),
     };
+
     setGuesses((prev) => [...prev, guessResult]);
 
     if (isCorrectGuess(comparison)) {
@@ -58,7 +58,7 @@ export default function CharacterOfTheDay() {
 
       {!isWon && <CharacterSearch onGuess={handleGuess} />}
 
-      {guesses.length > 0 && <GuessHistory guesses={guesses} />}
+      <GuessHistory guesses={guesses} />
 
       {process.env.NODE_ENV === "development" && (
         <div className="w-full max-w-md mx-auto mt-8 p-4 bg-gray-100 dark:bg-gray-900 rounded-lg text-xs">

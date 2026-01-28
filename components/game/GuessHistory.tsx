@@ -14,6 +14,14 @@ export default function GuessHistory({ guesses }: GuessHistoryProps) {
     );
   }
 
+  const lastGuessIndex = guesses.length - 1;
+  const lastGuess = guesses[lastGuessIndex];
+  const isLastGuessNew =
+    lastGuess &&
+    new Date().getTime() - new Date(lastGuess.timestamp).getTime() < 2000;
+
+  const reversedGuesses = [...guesses].reverse();
+
   return (
     <div className="w-full space-y-4">
       <h2 className="text-xl font-semibold text-foreground mb-4">
@@ -21,13 +29,19 @@ export default function GuessHistory({ guesses }: GuessHistoryProps) {
       </h2>
 
       <div className="space-y-3">
-        {guesses.map((guess, index) => (
-          <GuessCard
-            key={index}
-            guess={guess}
-            guessNumber={guesses.length - index}
-          />
-        ))}
+        {reversedGuesses.map((guess, index) => {
+          const originalIndex = guesses.length - 1 - index;
+          const isNew = isLastGuessNew && originalIndex === lastGuessIndex;
+
+          return (
+            <GuessCard
+              key={originalIndex}
+              guess={guess}
+              guessNumber={guesses.length - index}
+              isNew={isNew}
+            />
+          );
+        })}
       </div>
     </div>
   );

@@ -6,9 +6,14 @@ import AttributeBox from "./AttributeBox";
 interface GuessCardProps {
   guess: GuessResult;
   guessNumber: number;
+  isNew?: boolean;
 }
 
-export default function GuessCard({ guess, guessNumber }: GuessCardProps) {
+export default function GuessCard({
+  guess,
+  guessNumber,
+  isNew = false,
+}: GuessCardProps) {
   return (
     <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 shadow-sm">
       <div className="flex items-center gap-3 mb-3">
@@ -29,23 +34,29 @@ export default function GuessCard({ guess, guessNumber }: GuessCardProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 items-stretch">
         <AttributeBox
           label="Name"
           value={guess.character.name}
           matchType={guess.comparison.name}
+          isNew={isNew}
+          animationIndex={0}
         />
 
         <AttributeBox
           label="Role"
           value={guess.character.role}
           matchType={guess.comparison.role}
+          isNew={isNew}
+          animationIndex={1}
         />
 
         <AttributeBox
           label="Chain"
           value={guess.character.primaryChain}
           matchType={guess.comparison.primaryChain}
+          isNew={isNew}
+          animationIndex={2}
         />
 
         <AttributeBox
@@ -61,6 +72,8 @@ export default function GuessCard({ guess, guessNumber }: GuessCardProps) {
             </>
           }
           matchType={guess.comparison.yearJoined.match}
+          isNew={isNew}
+          animationIndex={3}
         />
       </div>
     </div>
