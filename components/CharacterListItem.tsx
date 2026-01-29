@@ -9,6 +9,9 @@ interface CharacterListItemProps {
   disabled?: boolean;
 }
 
+const imgsrcPlaceholder =
+  "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=400&h=400&fit=crop";
+
 export default function CharacterListItem({
   character,
   isSelected,
@@ -29,7 +32,7 @@ export default function CharacterListItem({
     >
       <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 ring-2 ring-purple-500/30">
         <Image
-          src={character.imageUrl}
+          src={character.imageUrl || imgsrcPlaceholder}
           alt={character.name}
           width={48}
           height={48}
