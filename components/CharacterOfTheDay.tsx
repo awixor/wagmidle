@@ -1,36 +1,17 @@
 "use client";
 
-import { useState } from "react";
 import CharacterSearch from "@/components/CharacterSearch";
 import GuessHistory from "@/components/game/GuessHistory";
-import { getCharacterOfTheDay } from "@/utils/characterOfTheDay";
-import { compareCharacters, isCorrectGuess } from "@/utils/gameLogic";
-import { CryptoFigure } from "@/types/CryptoFigure";
-import { GuessResult } from "@/types/GameState";
+import GameSkeleton from "@/components/skeletons/GameSkeleton";
+import { useCharacterGame } from "@/hooks/useCharacterGame";
 
 export default function CharacterOfTheDay() {
-  const [characterOfTheDay] = useState<CryptoFigure>(() =>
-    getCharacterOfTheDay(),
-  );
-  const [guesses, setGuesses] = useState<GuessResult[]>([]);
-  const [isWon, setIsWon] = useState(false);
+  const { characterOfTheDay, guesses, isWon, isLoading, handleGuess } =
+    useCharacterGame();
 
-  const handleGuess = (guessedCharacter: CryptoFigure) => {
-    if (isWon) return;
-
-    const comparison = compareCharacters(guessedCharacter, characterOfTheDay);
-    const guessResult: GuessResult = {
-      character: guessedCharacter,
-      comparison,
-      timestamp: new Date(),
-    };
-
-    setGuesses((prev) => [...prev, guessResult]);
-
-    if (isCorrectGuess(comparison)) {
-      setIsWon(true);
-    }
-  };
+  if (isLoading) {
+    return <GameSkeleton />;
+  }
 
   return (
     <div className="w-full space-y-8 flex flex-col justify-center">
