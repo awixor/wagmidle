@@ -1,4 +1,4 @@
-export type Role =
+type Role =
   | "Creator & Protocol Architect"
   | "Co-Founder & Lead Researcher"
   | "Co-Founder & Oracle Specialist"
@@ -104,6 +104,9 @@ export type PrimaryChain =
   | "XRP"
   | "AI";
 
+/**
+ * Full figure data - should only be used server-side
+ */
 export interface CryptoFigure {
   id: string;
   name: string;

@@ -1,9 +1,9 @@
 import Image from "next/image";
-import { CryptoFigure } from "@/types/CryptoFigure";
+import { PublicCryptoFigure } from "@/types/PublicCryptoFigure";
 import { imgsrcPlaceholder } from "@/data/figures";
 
 interface CharacterListItemProps {
-  character: CryptoFigure;
+  character: PublicCryptoFigure;
   isSelected: boolean;
   onSelect: () => void;
   onMouseEnter: () => void;

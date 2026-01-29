@@ -1,4 +1,4 @@
-import { cryptoFigures } from "@/data/figures";
+import { cryptoFigures } from "@/data/figures.server";
 import { CryptoFigure } from "@/types/CryptoFigure";
 
 /**

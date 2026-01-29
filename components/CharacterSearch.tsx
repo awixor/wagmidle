@@ -2,15 +2,15 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Search, Command } from "lucide-react";
-import { CryptoFigure } from "@/types/CryptoFigure";
-import { cryptoFigures } from "@/data/figures";
+import { PublicCryptoFigure } from "@/types/PublicCryptoFigure";
+import { publicFigures } from "@/data/figures";
 import CommandPalette from "@/components/ui/CommandPalette";
 import SearchInput from "@/components/ui/SearchInput";
 import CharacterListItem from "@/components/CharacterListItem";
 import KeyboardHints from "@/components/ui/KeyboardHints";
 
 interface CharacterSearchProps {
-  onGuess?: (character: CryptoFigure) => void;
+  onGuess?: (characterId: string) => void;
   disabled?: boolean;
   guessedIds?: string[];
 }
@@ -26,7 +26,7 @@ export default function CharacterSearch({
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const filteredCharacters = cryptoFigures.filter(
+  const filteredCharacters = publicFigures.filter(
     (character) =>
       !guessedIds.includes(character.id) &&
       character.name.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -54,10 +54,10 @@ export default function CharacterSearch({
     }
   }, [isOpen]);
 
-  const handleSelect = (character: CryptoFigure) => {
+  const handleSelect = (character: PublicCryptoFigure) => {
     if (!disabled) {
       if (onGuess) {
-        onGuess(character);
+        onGuess(character.id);
       }
       setIsOpen(false);
       setSearchQuery("");
@@ -116,7 +116,7 @@ export default function CharacterSearch({
           onChange={handleSearchChange}
           onKeyDown={handleKeyDown}
           onClear={handleClose}
-          placeholder="Search by name, role, or chain..."
+          placeholder="Search by name..."
         />
 
         <div
@@ -140,7 +140,7 @@ export default function CharacterSearch({
             <div className="px-4 py-12 text-center">
               <div className="text-gray-500 text-lg">No characters found</div>
               <div className="text-gray-600 text-sm mt-2">
-                Try searching by name, role, or blockchain
+                Try searching by name
               </div>
             </div>
           )}

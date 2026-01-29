@@ -1,27 +1,30 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { CryptoFigure } from "@/types/CryptoFigure";
 import { GuessResult } from "@/types/GameState";
-import { getCharacterOfTheDay } from "@/utils/characterOfTheDay";
-import { compareCharacters, isCorrectGuess } from "@/utils/gameLogic";
+import { AttributeComparison } from "@/utils/gameLogic";
 import { saveProgress, loadProgress } from "@/utils/storage";
 
-export function useCharacterGame() {
-  const [characterOfTheDay] = useState<CryptoFigure>(() =>
-    getCharacterOfTheDay(),
-  );
+interface GuessApiResponse {
+  guessedCharacter: CryptoFigure;
+  comparison: AttributeComparison;
+  isCorrect: boolean;
+}
 
+export function useCharacterGame() {
   const hasLoadedRef = useRef(false);
 
   const [gameState, setGameState] = useState<{
     guesses: GuessResult[];
     isWon: boolean;
     isLoading: boolean;
+    isSubmitting: boolean;
   }>(() => {
     if (typeof window === "undefined") {
       return {
         guesses: [],
         isWon: false,
         isLoading: true,
+        isSubmitting: false,
       };
     }
 
@@ -31,10 +34,11 @@ export function useCharacterGame() {
       guesses: savedProgress?.guesses ?? [],
       isWon: savedProgress?.isWon ?? false,
       isLoading: false,
+      isSubmitting: false,
     };
   });
 
-  const { guesses, isWon, isLoading } = gameState;
+  const { guesses, isWon, isLoading, isSubmitting } = gameState;
 
   useEffect(() => {
     hasLoadedRef.current = true;
@@ -47,32 +51,54 @@ export function useCharacterGame() {
   }, [guesses, isWon, isLoading]);
 
   const handleGuess = useCallback(
-    (guessedCharacter: CryptoFigure) => {
-      if (isWon) return;
+    async (characterId: string) => {
+      if (isWon || isSubmitting) return;
 
-      const comparison = compareCharacters(guessedCharacter, characterOfTheDay);
-      const guessResult: GuessResult = {
-        character: guessedCharacter,
-        comparison,
-        timestamp: new Date(),
-      };
+      setGameState((prev) => ({ ...prev, isSubmitting: true }));
 
-      const newWonState = isCorrectGuess(comparison);
+      try {
+        const response = await fetch("/api/game", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ characterId }),
+        });
 
-      setGameState((prev) => ({
-        ...prev,
-        guesses: [...prev.guesses, guessResult],
-        isWon: newWonState || prev.isWon,
-      }));
+        if (!response.ok) {
+          setGameState((prev) => ({ ...prev, isSubmitting: false }));
+          return;
+        }
+
+        const data: GuessApiResponse = await response.json();
+
+        const guessResult: GuessResult = {
+          character: data.guessedCharacter,
+          comparison: data.comparison,
+          timestamp: new Date(),
+        };
+
+        setGameState((prev) => ({
+          ...prev,
+          guesses: [...prev.guesses, guessResult],
+          isWon: data.isCorrect || prev.isWon,
+          isSubmitting: false,
+        }));
+      } catch (error) {
+        console.error("Error submitting guess:", error);
+        setGameState((prev) => ({ ...prev, isSubmitting: false }));
+      }
     },
-    [characterOfTheDay, isWon],
+    [isWon, isSubmitting],
   );
 
+  const lastGuess = guesses.length > 0 ? guesses[guesses.length - 1] : null;
+  const winnerName = isWon && lastGuess ? lastGuess.character.name : "";
+
   return {
-    characterOfTheDay,
     guesses,
     isWon,
     isLoading,
+    isSubmitting,
     handleGuess,
+    winnerName,
   };
 }

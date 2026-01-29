@@ -6,7 +6,7 @@ import GameSkeleton from "@/components/skeletons/GameSkeleton";
 import { useCharacterGame } from "@/hooks/useCharacterGame";
 
 export default function CharacterOfTheDay() {
-  const { characterOfTheDay, guesses, isWon, isLoading, handleGuess } =
+  const { guesses, isWon, isLoading, isSubmitting, handleGuess, winnerName } =
     useCharacterGame();
 
   if (isLoading) {
@@ -31,7 +31,7 @@ export default function CharacterOfTheDay() {
             Congratulations!
           </div>
           <div className="text-sm text-green-600 dark:text-green-500">
-            You guessed {characterOfTheDay.name} in {guesses.length}{" "}
+            You guessed {winnerName} in {guesses.length}{" "}
             {guesses.length === 1 ? "try" : "tries"}!
           </div>
         </div>
@@ -40,23 +40,12 @@ export default function CharacterOfTheDay() {
       {!isWon && (
         <CharacterSearch
           onGuess={handleGuess}
-          guessedIds={guesses.map((g) => g.character.id)}
+          guessedIds={guesses.map((guess) => guess.character.id)}
+          disabled={isSubmitting}
         />
       )}
 
       <GuessHistory guesses={guesses} />
-
-      {process.env.NODE_ENV === "development" && (
-        <div className="w-full max-w-md mx-auto mt-8 p-4 bg-gray-100 dark:bg-gray-900 rounded-lg text-xs">
-          <div className="font-mono text-gray-600 dark:text-gray-400">
-            <div>Debug Info:</div>
-            <div>Character: {characterOfTheDay.name}</div>
-            <div>Role: {characterOfTheDay.role}</div>
-            <div>Chain: {characterOfTheDay.primaryChain}</div>
-            <div>Year: {characterOfTheDay.yearJoined}</div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
