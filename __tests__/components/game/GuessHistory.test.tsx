@@ -15,7 +15,7 @@ const createMockGuess = (name: string, timestamp: Date): GuessResult => ({
   character: {
     id: name.toLowerCase().replace(" ", "-"),
     name,
-    role: "Founder",
+    role: "Founder & Entrepreneur",
     primaryChain: "ETH",
     yearJoined: 2015,
     imageUrl: `/images/${name}.png`,

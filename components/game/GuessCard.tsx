@@ -2,6 +2,7 @@ import { GuessResult } from "@/types/GameState";
 import { getYearDirectionArrow } from "@/utils/gameLogic";
 import Image from "next/image";
 import AttributeBox from "./AttributeBox";
+import { imgsrcPlaceholder } from "@/data/figures";
 
 interface GuessCardProps {
   guess: GuessResult;
@@ -19,7 +20,7 @@ export default function GuessCard({
       <div className="flex items-center gap-3 mb-3">
         <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-gray-300 dark:ring-gray-700">
           <Image
-            src={guess.character.imageUrl}
+            src={guess.character.imageUrl || imgsrcPlaceholder}
             alt={guess.character.name}
             width={40}
             height={40}

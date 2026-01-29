@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Wagmidle",
-  description: "Guess who's in the crypto space",
+  description: "Daily crypto guessing games",
 };
 
 export default function RootLayout({

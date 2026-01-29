@@ -14,7 +14,7 @@ vi.mock("next/image", () => ({
 const mockCharacter: CryptoFigure = {
   id: "vitalik",
   name: "Vitalik Buterin",
-  role: "Founder",
+  role: "Founder & Entrepreneur",
   primaryChain: "ETH",
   yearJoined: 2013,
   imageUrl: "/images/vitalik.png",

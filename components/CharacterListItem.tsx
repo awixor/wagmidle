@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { CryptoFigure } from "@/types/CryptoFigure";
+import { imgsrcPlaceholder } from "@/data/figures";
 
 interface CharacterListItemProps {
   character: CryptoFigure;
@@ -8,9 +9,6 @@ interface CharacterListItemProps {
   onMouseEnter: () => void;
   disabled?: boolean;
 }
-
-const imgsrcPlaceholder =
-  "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=400&h=400&fit=crop";
 
 export default function CharacterListItem({
   character,

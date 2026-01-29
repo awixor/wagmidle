@@ -15,7 +15,7 @@ const mockGuess: GuessResult = {
   character: {
     id: "1",
     name: "Vitalik Buterin",
-    role: "Founder",
+    role: "Founder & Entrepreneur",
     primaryChain: "ETH",
     yearJoined: 2013,
     imageUrl: "/images/vitalik.png",
@@ -62,7 +62,7 @@ describe("GuessCard", () => {
   it("renders attribute values correctly", () => {
     render(<GuessCard guess={mockGuess} guessNumber={1} />);
 
-    expect(screen.getByText("Founder")).toBeInTheDocument();
+    expect(screen.getByText("Founder & Entrepreneur")).toBeInTheDocument();
     expect(screen.getByText("ETH")).toBeInTheDocument();
   });
 
