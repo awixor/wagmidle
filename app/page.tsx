@@ -6,8 +6,9 @@ import TokenOfTheDay from "@/components/TokenOfTheDay";
 import CategorySwitcher, { GameCategory } from "@/components/CategorySwitcher";
 
 export default function Home() {
-  const [activeCategory, setActiveCategory] =
-    useState<GameCategory>("characters");
+  const [activeCategory, setActiveCategory] = useState<GameCategory>(
+    GameCategory.Characters,
+  );
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-8 px-6 md:px-16">
@@ -17,7 +18,7 @@ export default function Home() {
           onCategoryChange={setActiveCategory}
         />
 
-        {activeCategory === "characters" ? (
+        {activeCategory === GameCategory.Characters ? (
           <CharacterOfTheDay />
         ) : (
           <TokenOfTheDay />

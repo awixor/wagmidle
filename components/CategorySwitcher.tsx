@@ -2,7 +2,10 @@
 
 import { motion } from "framer-motion";
 
-export type GameCategory = "characters" | "tokens";
+export enum GameCategory {
+  Characters = "characters",
+  Tokens = "tokens",
+}
 
 interface CategorySwitcherProps {
   activeCategory: GameCategory;
@@ -21,8 +24,14 @@ export default function CategorySwitcher({
           layoutId="activeTab"
           initial={false}
           animate={{
-            x: activeCategory === "characters" ? 0 : "100%",
-            width: "50%",
+            left:
+              activeCategory === GameCategory.Characters
+                ? "4px"
+                : "calc(50% + 0px)",
+            right:
+              activeCategory === GameCategory.Characters
+                ? "calc(50% + 0px)"
+                : "4px",
           }}
           transition={{
             type: "spring",
@@ -32,9 +41,9 @@ export default function CategorySwitcher({
         />
 
         <button
-          onClick={() => onCategoryChange("characters")}
+          onClick={() => onCategoryChange(GameCategory.Characters)}
           className={`relative z-10 px-4 sm:px-6 py-2.5 text-sm font-medium rounded-lg cursor-pointer transition-colors ${
-            activeCategory === "characters"
+            activeCategory === GameCategory.Characters
               ? "text-white"
               : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
           }`}
@@ -59,9 +68,9 @@ export default function CategorySwitcher({
         </button>
 
         <button
-          onClick={() => onCategoryChange("tokens")}
+          onClick={() => onCategoryChange(GameCategory.Tokens)}
           className={`relative z-10 px-4 sm:px-6 py-2.5 text-sm font-medium rounded-lg cursor-pointer transition-colors ${
-            activeCategory === "tokens"
+            activeCategory === GameCategory.Tokens
               ? "text-white"
               : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
           }`}
