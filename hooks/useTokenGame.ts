@@ -1,20 +1,23 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { CryptoFigure } from "@/types/CryptoFigure";
-import { GuessResult } from "@/types/GameState";
-import { AttributeComparison } from "@/utils/gameLogic";
-import { saveCharacterProgress, loadCharacterProgress } from "@/utils/storage";
+import { Token } from "@/types/Token";
+import { TokenAttributeComparison } from "@/utils/tokenGameLogic";
+import {
+  TokenGuessResult,
+  saveTokenProgress,
+  loadTokenProgress,
+} from "@/utils/storage";
 
-interface GuessApiResponse {
-  guessedCharacter: CryptoFigure;
-  comparison: AttributeComparison;
+interface TokenGuessApiResponse {
+  guessedToken: Token;
+  comparison: TokenAttributeComparison;
   isCorrect: boolean;
 }
 
-export function useCharacterGame() {
+export function useTokenGame() {
   const hasLoadedRef = useRef(false);
 
   const [gameState, setGameState] = useState<{
-    guesses: GuessResult[];
+    guesses: TokenGuessResult[];
     isWon: boolean;
     isLoading: boolean;
     isSubmitting: boolean;
@@ -28,7 +31,7 @@ export function useCharacterGame() {
       };
     }
 
-    const savedProgress = loadCharacterProgress();
+    const savedProgress = loadTokenProgress();
 
     return {
       guesses: savedProgress?.guesses ?? [],
@@ -46,21 +49,21 @@ export function useCharacterGame() {
 
   useEffect(() => {
     if (hasLoadedRef.current && !isLoading) {
-      saveCharacterProgress(guesses, isWon);
+      saveTokenProgress(guesses, isWon);
     }
   }, [guesses, isWon, isLoading]);
 
   const handleGuess = useCallback(
-    async (characterId: string) => {
+    async (tokenId: string) => {
       if (isWon || isSubmitting) return;
 
       setGameState((prev) => ({ ...prev, isSubmitting: true }));
 
       try {
-        const response = await fetch("/api/game", {
+        const response = await fetch("/api/token-game", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ characterId }),
+          body: JSON.stringify({ tokenId }),
         });
 
         if (!response.ok) {
@@ -68,10 +71,10 @@ export function useCharacterGame() {
           return;
         }
 
-        const data: GuessApiResponse = await response.json();
+        const data: TokenGuessApiResponse = await response.json();
 
-        const guessResult: GuessResult = {
-          character: data.guessedCharacter,
+        const guessResult: TokenGuessResult = {
+          token: data.guessedToken,
           comparison: data.comparison,
           timestamp: new Date(),
         };
@@ -91,7 +94,7 @@ export function useCharacterGame() {
   );
 
   const lastGuess = guesses.length > 0 ? guesses[guesses.length - 1] : null;
-  const winnerName = isWon && lastGuess ? lastGuess.character.name : "";
+  const winnerName = isWon && lastGuess ? lastGuess.token.name : "";
 
   return {
     guesses,
