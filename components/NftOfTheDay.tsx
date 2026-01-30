@@ -2,6 +2,7 @@
 
 import NftSearch from "@/components/NftSearch";
 import NftSplashView from "@/components/game/NftSplashView";
+import NftGuessHistory from "@/components/game/NftGuessHistory";
 import GameSkeleton from "@/components/skeletons/GameSkeleton";
 import { useNftGame } from "@/hooks/useNftGame";
 
@@ -35,14 +36,14 @@ export default function NftOfTheDay() {
       </div>
 
       {isWon && (
-        <div className="w-full max-w-md mx-auto bg-green-500/10 border-2 border-green-500 rounded-xl p-4 text-center">
-          <div className="text-2xl mb-2">🎉</div>
-          <div className="font-bold text-green-700 dark:text-green-400">
+        <div className="w-full max-w-md mx-auto bg-linear-to-r from-green-500/20 to-emerald-500/10 border-2 border-green-500 rounded-xl p-6 text-center shadow-lg shadow-green-500/20">
+          <div className="text-4xl mb-3">🎉</div>
+          <div className="font-bold text-xl text-green-400">
             Congratulations!
           </div>
-          <div className="text-sm text-green-600 dark:text-green-500">
-            You guessed {winnerName} in {guesses.length}{" "}
-            {guesses.length === 1 ? "try" : "tries"}!
+          <div className="text-sm text-green-500 mt-1">
+            You guessed <span className="font-semibold">{winnerName}</span> in{" "}
+            {guesses.length} {guesses.length === 1 ? "try" : "tries"}!
           </div>
         </div>
       )}
@@ -55,27 +56,7 @@ export default function NftOfTheDay() {
         />
       )}
 
-      {/* Guess history */}
-      {guesses.length > 0 && (
-        <div className="w-full max-w-md space-y-2">
-          <h3 className="text-sm font-medium text-gray-500">Your Guesses:</h3>
-          <div className="space-y-2">
-            {guesses.map((guess, index) => (
-              <div
-                key={index}
-                className={`p-3 rounded-lg border ${
-                  guess.isCorrect
-                    ? "bg-green-500/10 border-green-500"
-                    : "bg-red-500/10 border-red-500/50"
-                }`}
-              >
-                <span className="font-medium">{guess.nft.name}</span>
-                {guess.isCorrect && <span className="ml-2">✓</span>}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <NftGuessHistory guesses={guesses} />
     </div>
   );
 }
