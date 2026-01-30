@@ -1,41 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import NftSearch from "@/components/NftSearch";
 import NftSplashView from "@/components/game/NftSplashView";
 import GameSkeleton from "@/components/skeletons/GameSkeleton";
 import { useNftGame } from "@/hooks/useNftGame";
 
-interface NftOfTheDayData {
-  imageUrl: string;
-}
-
 export default function NftOfTheDay() {
   const { guesses, isWon, isLoading, isSubmitting, handleGuess, winnerName } =
     useNftGame();
 
-  const [nftImage, setNftImage] = useState<string | null>(null);
-  const [imageLoading, setImageLoading] = useState(true);
+  const zoomLevel = isWon ? 100 : Math.max(100, 400 - guesses.length * 50);
+  const positionIndex = guesses.length % 7;
 
-  useEffect(() => {
-    async function fetchNftImage() {
-      try {
-        const res = await fetch("/api/nft-game");
-        if (res.ok) {
-          const data: NftOfTheDayData = await res.json();
+  const todayString = new Date().toISOString().split("T")[0];
+  const nftImageUrl = `/api/nft-image?date=${todayString}&zoom=${zoomLevel}&position=${positionIndex}`;
 
-          setNftImage(data.imageUrl);
-        }
-      } catch (err) {
-        console.error("Error fetching NFT image:", err);
-      } finally {
-        setImageLoading(false);
-      }
-    }
-    fetchNftImage();
-  }, []);
-
-  if (isLoading || imageLoading) {
+  if (isLoading) {
     return <GameSkeleton />;
   }
 
@@ -48,15 +28,9 @@ export default function NftOfTheDay() {
         </p>
       </div>
 
-      {nftImage && (
-        <div className="w-full max-w-md">
-          <NftSplashView
-            imageUrl={nftImage}
-            guessCount={guesses.length}
-            isRevealed={isWon}
-          />
-        </div>
-      )}
+      <div className="w-full max-w-md">
+        <NftSplashView imageUrl={nftImageUrl} isRevealed={isWon} />
+      </div>
 
       {isWon && (
         <div className="w-full max-w-md mx-auto bg-green-500/10 border-2 border-green-500 rounded-xl p-4 text-center">

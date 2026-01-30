@@ -1,20 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getNftOfTheDay, getNftById } from "@/data/nfts.server";
 
-export async function GET() {
-  try {
-    const nft = getNftOfTheDay();
-
-    return NextResponse.json(nft);
-  } catch (error) {
-    console.error("Error fetching NFT of the day:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
-  }
-}
-
 export async function POST(request: NextRequest) {
   try {
     const { nftId } = await request.json();
