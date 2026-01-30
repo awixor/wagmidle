@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Bitcoin, UserRoundSearchIcon, ImageIcon } from "lucide-react";
 
@@ -45,49 +44,34 @@ export default function CategorySwitcher({
   activeCategory,
   onCategoryChange,
 }: CategorySwitcherProps) {
-  const activeIndex = useMemo(
-    () => TABS.findIndex((tab) => tab.id === activeCategory),
-    [activeCategory],
-  );
-
-  const tabCount = TABS.length;
-  const tabWidthPercent = 100 / tabCount;
-
   return (
     <div className="flex items-center justify-center mb-8">
-      <div className="relative inline-flex bg-gray-200 dark:bg-gray-800 rounded-xl p-1">
-        {/* Animated background indicator */}
-        <motion.div
-          className="absolute top-1 bottom-1 rounded-lg bg-linear-to-r from-purple-500 to-cyan-500"
-          style={{
-            width: `calc(${tabWidthPercent}% - 4px)`,
-            left: 4,
-          }}
-          initial={false}
-          animate={{
-            x: `calc(${activeIndex * 100}% + ${activeIndex * 4}px)`,
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 500,
-            damping: 30,
-          }}
-        />
-
-        {/* Tab buttons */}
+      <div className="inline-flex bg-gray-200 dark:bg-gray-800 rounded-xl p-1 gap-1">
         {TABS.map((tab) => {
           const isActive = activeCategory === tab.id;
+
           return (
             <button
               key={tab.id}
               onClick={() => onCategoryChange(tab.id)}
-              className={`relative z-10 px-4 sm:px-6 py-2.5 text-sm font-medium rounded-lg cursor-pointer transition-colors ${
+              className={`relative px-4 sm:px-6 py-2.5 text-sm font-medium rounded-lg cursor-pointer transition-colors ${
                 isActive
                   ? "text-white"
                   : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
               }`}
             >
-              <span className="flex items-center gap-2">
+              {isActive && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute inset-0 bg-linear-to-r from-purple-500 to-cyan-500 rounded-lg"
+                  transition={{
+                    type: "spring",
+                    stiffness: 500,
+                    damping: 30,
+                  }}
+                />
+              )}
+              <span className="relative z-10 flex items-center gap-2">
                 {tab.icon}
                 {tab.shortLabel ? (
                   <>
