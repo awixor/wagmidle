@@ -9,11 +9,13 @@ export default function NftOfTheDay() {
   const { guesses, isWon, isLoading, isSubmitting, handleGuess, winnerName } =
     useNftGame();
 
-  const zoomLevel = isWon ? 100 : Math.max(100, 400 - guesses.length * 50);
-  const positionIndex = guesses.length % 7;
+  const ZOOM_LEVELS = [1200, 1000, 800, 600, 400, 300, 200, 150, 100];
+  const zoomLevel = isWon
+    ? 100
+    : ZOOM_LEVELS[Math.min(guesses.length, ZOOM_LEVELS.length - 1)];
 
   const todayString = new Date().toISOString().split("T")[0];
-  const nftImageUrl = `/api/nft-image?date=${todayString}&zoom=${zoomLevel}&position=${positionIndex}`;
+  const nftImageUrl = `/api/nft-image?date=${todayString}&zoom=${zoomLevel}`;
 
   if (isLoading) {
     return <GameSkeleton />;
@@ -29,7 +31,7 @@ export default function NftOfTheDay() {
       </div>
 
       <div className="w-full max-w-md">
-        <NftSplashView imageUrl={nftImageUrl} isRevealed={isWon} />
+        <NftSplashView imageUrl={nftImageUrl} />
       </div>
 
       {isWon && (
