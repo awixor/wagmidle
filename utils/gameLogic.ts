@@ -1,4 +1,5 @@
 import { CryptoFigure } from "@/types/CryptoFigure";
+import { ArrowDown, ArrowUp, LucideIcon } from "lucide-react";
 
 export type MatchType = "match" | "partial" | "no-match";
 export type YearDirection = "higher" | "lower" | "match";
@@ -23,13 +24,16 @@ export function compareCharacters(
   guess: CryptoFigure,
   target: CryptoFigure,
 ): AttributeComparison {
+  // Helper to keep the return object clean
+  const check = (key: keyof CryptoFigure) =>
+    guess[key] === target[key] ? "match" : "no-match";
+
   return {
-    name: guess.name === target.name ? "match" : "no-match",
-    role: guess.role === target.role ? "match" : "no-match",
-    primaryChain:
-      guess.primaryChain === target.primaryChain ? "match" : "no-match",
+    name: check("name"),
+    role: check("role"),
+    primaryChain: check("primaryChain"),
     yearJoined: {
-      match: guess.yearJoined === target.yearJoined ? "match" : "no-match",
+      match: check("yearJoined"),
       direction:
         guess.yearJoined === target.yearJoined
           ? "match"
@@ -46,11 +50,10 @@ export function compareCharacters(
  * @returns True if all attributes match
  */
 export function isCorrectGuess(comparison: AttributeComparison): boolean {
-  return (
-    comparison.name === "match" &&
-    comparison.role === "match" &&
-    comparison.primaryChain === "match" &&
-    comparison.yearJoined.match === "match"
+  const { name, role, primaryChain, yearJoined } = comparison;
+
+  return [name, role, primaryChain, yearJoined.match].every(
+    (status) => status === "match",
   );
 }
 
@@ -70,12 +73,7 @@ export function getMatchColor(matchType: MatchType): string {
   }
 }
 
-/**
- * Gets an arrow icon based on year direction
- * @param direction - The direction hint for the year
- * @returns Arrow symbol
- */
-export function getYearDirectionArrow(direction?: YearDirection): string {
-  if (!direction || direction === "match") return "";
-  return direction === "higher" ? "↑" : "↓";
-}
+export const DIRECTION_ICONS: Record<string, LucideIcon> = {
+  higher: ArrowUp,
+  lower: ArrowDown,
+};

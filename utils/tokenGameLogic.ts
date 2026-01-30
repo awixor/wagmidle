@@ -27,29 +27,31 @@ export function compareTokens(
   guess: Token,
   target: Token,
 ): TokenAttributeComparison {
+  const check = (key: keyof Token) =>
+    guess[key] === target[key] ? "match" : "no-match";
+
+  const compareNumeric = (gVal: number, tVal: number, invert = false) => {
+    if (gVal === tVal)
+      return { match: "match" as const, direction: "match" as const };
+
+    const isHigher = invert ? gVal > tVal : gVal < tVal;
+
+    return {
+      match: "no-match" as const,
+      direction: isHigher ? ("higher" as const) : ("lower" as const),
+    };
+  };
+
   return {
-    name: guess.name === target.name ? "match" : "no-match",
-    network: guess.network === target.network ? "match" : "no-match",
-    category: guess.category === target.category ? "match" : "no-match",
-    launchYear: {
-      match: guess.launchYear === target.launchYear ? "match" : "no-match",
-      direction:
-        guess.launchYear === target.launchYear
-          ? "match"
-          : guess.launchYear < target.launchYear
-            ? "higher"
-            : "lower",
-    },
-    marketCapRank: {
-      match:
-        guess.marketCapRank === target.marketCapRank ? "match" : "no-match",
-      direction:
-        guess.marketCapRank === target.marketCapRank
-          ? "match"
-          : guess.marketCapRank > target.marketCapRank
-            ? "higher"
-            : "lower",
-    },
+    name: check("name"),
+    network: check("network"),
+    category: check("category"),
+    launchYear: compareNumeric(guess.launchYear, target.launchYear),
+    marketCapRank: compareNumeric(
+      guess.marketCapRank,
+      target.marketCapRank,
+      true,
+    ),
   };
 }
 
@@ -68,30 +70,4 @@ export function isCorrectTokenGuess(
     comparison.launchYear.match === "match" &&
     comparison.marketCapRank.match === "match"
   );
-}
-
-/**
- * Gets a color class based on match type
- * @param matchType - The type of match
- * @returns Tailwind CSS classes for the match type
- */
-export function getTokenMatchColor(matchType: MatchType): string {
-  switch (matchType) {
-    case "match":
-      return "bg-green-500 text-white border-green-600";
-    case "partial":
-      return "bg-yellow-500 text-white border-yellow-600";
-    case "no-match":
-      return "bg-gray-500 text-white border-gray-600";
-  }
-}
-
-/**
- * Gets an arrow icon based on rank direction
- * @param direction - The direction hint
- * @returns Arrow symbol
- */
-export function getRankDirectionArrow(direction?: RankDirection): string {
-  if (!direction || direction === "match") return "";
-  return direction === "higher" ? "↑" : "↓";
 }

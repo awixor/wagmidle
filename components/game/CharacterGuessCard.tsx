@@ -1,8 +1,9 @@
 import { GuessResult } from "@/types/GameState";
-import { getYearDirectionArrow } from "@/utils/gameLogic";
 import Image from "next/image";
 import AttributeBox from "./AttributeBox";
 import { imgsrcPlaceholder } from "@/data/figures";
+import { extractXHandle } from "@/utils/textUtils";
+import { DIRECTION_ICONS } from "@/utils/gameLogic";
 
 interface CharacterGuessCardProps {
   guess: GuessResult;
@@ -24,6 +25,13 @@ export default function CharacterGuessCard({
     yearJoined: yearJoinedComparison,
   } = comparison;
 
+  const xHandle = extractXHandle(imageUrl);
+  const xProfileUrl = xHandle ? `https://x.com/${xHandle}` : undefined;
+
+  const YearDirectionIcon = yearJoinedComparison.direction
+    ? DIRECTION_ICONS[yearJoinedComparison.direction]
+    : null;
+
   return (
     <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 shadow-sm">
       <div className="flex items-center gap-3 mb-3">
@@ -37,7 +45,18 @@ export default function CharacterGuessCard({
           />
         </div>
         <div className="flex-1" role="heading" aria-level={1}>
-          <div className="font-semibold text-foreground">{name}</div>
+          {xProfileUrl ? (
+            <a
+              href={xProfileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-foreground hover:text-purple-400 transition-colors inline-flex items-center gap-1 group"
+            >
+              {name}
+            </a>
+          ) : (
+            <div className="font-semibold text-foreground">{name}</div>
+          )}
           <div className="text-xs text-gray-500">Guess #{guessNumber}</div>
         </div>
       </div>
@@ -70,14 +89,10 @@ export default function CharacterGuessCard({
         <AttributeBox
           label="Year"
           value={
-            <>
+            <span className="inline-flex items-center gap-1">
               {yearJoined}
-              {yearJoinedComparison.direction && (
-                <span className="text-lg">
-                  {getYearDirectionArrow(yearJoinedComparison.direction)}
-                </span>
-              )}
-            </>
+              {YearDirectionIcon && <YearDirectionIcon className="w-4 h-4" />}
+            </span>
           }
           matchType={yearJoinedComparison.match}
           isNew={isNew}
