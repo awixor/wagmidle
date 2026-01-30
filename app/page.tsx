@@ -3,6 +3,7 @@
 import { useState } from "react";
 import CharacterOfTheDay from "@/components/CharacterOfTheDay";
 import TokenOfTheDay from "@/components/TokenOfTheDay";
+import NftOfTheDay from "@/components/NftOfTheDay";
 import CategorySwitcher, { GameCategory } from "@/components/CategorySwitcher";
 
 export default function Home() {
@@ -20,6 +21,7 @@ export default function Home() {
 
         {activeCategory === GameCategory.Characters && <CharacterOfTheDay />}
         {activeCategory === GameCategory.Tokens && <TokenOfTheDay />}
+        {activeCategory === GameCategory.NFTs && <NftOfTheDay />}
       </div>
     </div>
   );

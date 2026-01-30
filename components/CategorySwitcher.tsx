@@ -2,11 +2,12 @@
 
 import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { Bitcoin, UserRoundSearchIcon } from "lucide-react";
+import { Bitcoin, UserRoundSearchIcon, ImageIcon } from "lucide-react";
 
 export enum GameCategory {
   Characters = "characters",
   Tokens = "tokens",
+  NFTs = "nfts",
 }
 
 interface Tab {
@@ -33,6 +34,11 @@ const TABS: Tab[] = [
     label: "Tokens",
     icon: <Bitcoin className="w-5 h-5" />,
   },
+  {
+    id: GameCategory.NFTs,
+    label: "NFTs",
+    icon: <ImageIcon className="w-5 h-5" />,
+  },
 ];
 
 export default function CategorySwitcher({
@@ -44,22 +50,28 @@ export default function CategorySwitcher({
     [activeCategory],
   );
 
+  const tabCount = TABS.length;
+  const tabWidthPercent = 100 / tabCount;
+
   return (
     <div className="flex items-center justify-center mb-8">
       <div className="relative inline-flex bg-gray-200 dark:bg-gray-800 rounded-xl p-1">
         {/* Animated background indicator */}
         <motion.div
-          className="absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg bg-linear-to-r from-purple-500 to-cyan-500"
+          className="absolute top-1 bottom-1 rounded-lg bg-linear-to-r from-purple-500 to-cyan-500"
+          style={{
+            width: `calc(${tabWidthPercent}% - 4px)`,
+            left: 4,
+          }}
           initial={false}
           animate={{
-            x: activeIndex === 0 ? 0 : "calc(100% + 4px)",
+            x: `calc(${activeIndex * 100}% + ${activeIndex * 4}px)`,
           }}
           transition={{
             type: "spring",
             stiffness: 500,
             damping: 30,
           }}
-          style={{ left: 4 }}
         />
 
         {/* Tab buttons */}
