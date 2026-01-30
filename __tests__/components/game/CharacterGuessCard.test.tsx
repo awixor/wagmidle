@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import GuessCard from "@/components/game/GuessCard";
+import CharacterGuessCard from "@/components/game/CharacterGuessCard";
 import { GuessResult } from "@/types/GameState";
 
 // Mock next/image
@@ -32,9 +32,9 @@ const mockGuess: GuessResult = {
   timestamp: new Date(),
 };
 
-describe("GuessCard", () => {
+describe("CharacterGuessCard", () => {
   it("renders character name and image", () => {
-    render(<GuessCard guess={mockGuess} guessNumber={1} />);
+    render(<CharacterGuessCard guess={mockGuess} guessNumber={1} />);
 
     const heading = screen.getByRole("heading", { name: /vitalik buterin/i });
     expect(heading).toBeInTheDocument();
@@ -45,13 +45,13 @@ describe("GuessCard", () => {
   });
 
   it("renders guess number", () => {
-    render(<GuessCard guess={mockGuess} guessNumber={3} />);
+    render(<CharacterGuessCard guess={mockGuess} guessNumber={3} />);
 
     expect(screen.getByText("Guess #3")).toBeInTheDocument();
   });
 
   it("renders all four attribute boxes", () => {
-    render(<GuessCard guess={mockGuess} guessNumber={1} />);
+    render(<CharacterGuessCard guess={mockGuess} guessNumber={1} />);
 
     expect(screen.getByText("Name")).toBeInTheDocument();
     expect(screen.getByText("Role")).toBeInTheDocument();
@@ -60,14 +60,14 @@ describe("GuessCard", () => {
   });
 
   it("renders attribute values correctly", () => {
-    render(<GuessCard guess={mockGuess} guessNumber={1} />);
+    render(<CharacterGuessCard guess={mockGuess} guessNumber={1} />);
 
     expect(screen.getByText("Founder & Entrepreneur")).toBeInTheDocument();
     expect(screen.getByText("ETH")).toBeInTheDocument();
   });
 
   it("renders year with direction arrow when applicable", () => {
-    render(<GuessCard guess={mockGuess} guessNumber={1} />);
+    render(<CharacterGuessCard guess={mockGuess} guessNumber={1} />);
 
     expect(screen.getByText("2013")).toBeInTheDocument();
     expect(screen.getByText("↑")).toBeInTheDocument();

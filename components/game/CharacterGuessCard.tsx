@@ -4,33 +4,40 @@ import Image from "next/image";
 import AttributeBox from "./AttributeBox";
 import { imgsrcPlaceholder } from "@/data/figures";
 
-interface GuessCardProps {
+interface CharacterGuessCardProps {
   guess: GuessResult;
   guessNumber: number;
   isNew?: boolean;
 }
 
-export default function GuessCard({
+export default function CharacterGuessCard({
   guess,
   guessNumber,
   isNew = false,
-}: GuessCardProps) {
+}: CharacterGuessCardProps) {
+  const { character, comparison } = guess;
+  const { name, role, primaryChain, yearJoined, imageUrl } = character;
+  const {
+    name: nameComparison,
+    role: roleComparison,
+    primaryChain: primaryChainComparison,
+    yearJoined: yearJoinedComparison,
+  } = comparison;
+
   return (
     <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 shadow-sm">
       <div className="flex items-center gap-3 mb-3">
         <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-gray-300 dark:ring-gray-700">
           <Image
-            src={guess.character.imageUrl || imgsrcPlaceholder}
-            alt={guess.character.name}
+            src={imageUrl || imgsrcPlaceholder}
+            alt={name}
             width={40}
             height={40}
             className="w-full h-full object-cover"
           />
         </div>
         <div className="flex-1" role="heading" aria-level={1}>
-          <div className="font-semibold text-foreground">
-            {guess.character.name}
-          </div>
+          <div className="font-semibold text-foreground">{name}</div>
           <div className="text-xs text-gray-500">Guess #{guessNumber}</div>
         </div>
       </div>
@@ -38,24 +45,24 @@ export default function GuessCard({
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 items-stretch">
         <AttributeBox
           label="Name"
-          value={guess.character.name}
-          matchType={guess.comparison.name}
+          value={name}
+          matchType={nameComparison}
           isNew={isNew}
           animationIndex={0}
         />
 
         <AttributeBox
           label="Role"
-          value={guess.character.role}
-          matchType={guess.comparison.role}
+          value={role}
+          matchType={roleComparison}
           isNew={isNew}
           animationIndex={1}
         />
 
         <AttributeBox
           label="Chain"
-          value={guess.character.primaryChain}
-          matchType={guess.comparison.primaryChain}
+          value={primaryChain}
+          matchType={primaryChainComparison}
           isNew={isNew}
           animationIndex={2}
         />
@@ -64,15 +71,15 @@ export default function GuessCard({
           label="Year"
           value={
             <>
-              {guess.character.yearJoined}
-              {guess.comparison.yearJoined.direction && (
+              {yearJoined}
+              {yearJoinedComparison.direction && (
                 <span className="text-lg">
-                  {getYearDirectionArrow(guess.comparison.yearJoined.direction)}
+                  {getYearDirectionArrow(yearJoinedComparison.direction)}
                 </span>
               )}
             </>
           }
-          matchType={guess.comparison.yearJoined.match}
+          matchType={yearJoinedComparison.match}
           isNew={isNew}
           animationIndex={3}
         />

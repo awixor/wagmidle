@@ -1,11 +1,13 @@
 import { GuessResult } from "@/types/GameState";
-import GuessCard from "./GuessCard";
+import CharacterGuessCard from "./CharacterGuessCard";
 
-interface GuessHistoryProps {
+interface CharacterGuessHistoryProps {
   guesses: GuessResult[];
 }
 
-export default function GuessHistory({ guesses }: GuessHistoryProps) {
+export default function CharacterGuessHistory({
+  guesses,
+}: CharacterGuessHistoryProps) {
   if (guesses.length === 0) {
     return (
       <div className="text-center text-gray-500 py-8">
@@ -34,7 +36,7 @@ export default function GuessHistory({ guesses }: GuessHistoryProps) {
           const isNew = isLastGuessNew && originalIndex === lastGuessIndex;
 
           return (
-            <GuessCard
+            <CharacterGuessCard
               key={originalIndex}
               guess={guess}
               guessNumber={guesses.length - index}

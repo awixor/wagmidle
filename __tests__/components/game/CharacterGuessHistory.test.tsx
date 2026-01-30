@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import GuessHistory from "@/components/game/GuessHistory";
+import CharacterGuessHistory from "@/components/game/CharacterGuessHistory";
 import { GuessResult } from "@/types/GameState";
 
 // Mock next/image
@@ -29,9 +29,9 @@ const createMockGuess = (name: string, timestamp: Date): GuessResult => ({
   timestamp,
 });
 
-describe("GuessHistory", () => {
+describe("CharacterGuessHistory", () => {
   it("renders empty state when no guesses", () => {
-    render(<GuessHistory guesses={[]} />);
+    render(<CharacterGuessHistory guesses={[]} />);
 
     expect(
       screen.getByText("No guesses yet. Start by searching for a character!"),
@@ -40,7 +40,7 @@ describe("GuessHistory", () => {
 
   it("renders guess count in header", () => {
     const guesses = [createMockGuess("Vitalik", new Date())];
-    render(<GuessHistory guesses={guesses} />);
+    render(<CharacterGuessHistory guesses={guesses} />);
 
     expect(screen.getByText("Your Guesses (1)")).toBeInTheDocument();
   });
@@ -50,7 +50,7 @@ describe("GuessHistory", () => {
       createMockGuess("Vitalik", new Date(Date.now() - 60000)),
       createMockGuess("Satoshi", new Date(Date.now() - 30000)),
     ];
-    render(<GuessHistory guesses={guesses} />);
+    render(<CharacterGuessHistory guesses={guesses} />);
 
     expect(screen.getByText("Your Guesses (2)")).toBeInTheDocument();
     // Names appear multiple times (in card header and attribute box)
@@ -63,7 +63,7 @@ describe("GuessHistory", () => {
       createMockGuess("First", new Date(Date.now() - 60000)),
       createMockGuess("Second", new Date()),
     ];
-    render(<GuessHistory guesses={guesses} />);
+    render(<CharacterGuessHistory guesses={guesses} />);
 
     const cards = screen.getAllByText(/Guess #/);
     // Second guess should be #2 and appear first in the DOM (newest first)

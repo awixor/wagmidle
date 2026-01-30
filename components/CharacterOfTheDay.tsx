@@ -1,7 +1,7 @@
 "use client";
 
 import CharacterSearch from "@/components/CharacterSearch";
-import GuessHistory from "@/components/game/GuessHistory";
+import CharacterGuessHistory from "@/components/game/CharacterGuessHistory";
 import GameSkeleton from "@/components/skeletons/GameSkeleton";
 import { useCharacterGame } from "@/hooks/useCharacterGame";
 
@@ -45,7 +45,7 @@ export default function CharacterOfTheDay() {
         />
       )}
 
-      <GuessHistory guesses={guesses} />
+      <CharacterGuessHistory guesses={guesses} />
     </div>
   );
 }
