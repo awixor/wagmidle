@@ -11,7 +11,7 @@ export default function Header() {
             alt="Wagmidle Logo"
             width={180}
             height={45}
-            className="object-contain"
+            className="object-contain w-auto h-auto"
             priority
           />
         </Link>

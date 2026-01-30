@@ -18,11 +18,8 @@ export default function Home() {
           onCategoryChange={setActiveCategory}
         />
 
-        {activeCategory === GameCategory.Characters ? (
-          <CharacterOfTheDay />
-        ) : (
-          <TokenOfTheDay />
-        )}
+        {activeCategory === GameCategory.Characters && <CharacterOfTheDay />}
+        {activeCategory === GameCategory.Tokens && <TokenOfTheDay />}
       </div>
     </div>
   );
