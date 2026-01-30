@@ -1,65 +1,42 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import NftSplashView, { RevealState } from "@/components/game/NftSplashView";
+import NftSearch from "@/components/NftSearch";
+import NftSplashView from "@/components/game/NftSplashView";
+import GameSkeleton from "@/components/skeletons/GameSkeleton";
+import { useNftGame } from "@/hooks/useNftGame";
 
-// Demo NFT for testing - BAYC #1
-const DEMO_NFT = {
-  contractAddress: "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D",
-  tokenId: "1",
-};
-
-interface NftData {
-  image: string;
-  collectionName: string;
-  rarityScore: number | null;
-  traits: { trait_type: string; value: string }[];
+interface NftOfTheDayData {
+  imageUrl: string;
 }
 
 export default function NftOfTheDay() {
-  const [nftData, setNftData] = useState<NftData | null>(null);
-  const [revealState, setRevealState] = useState<RevealState>(1);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { guesses, isWon, isLoading, isSubmitting, handleGuess, winnerName } =
+    useNftGame();
+
+  const [nftImage, setNftImage] = useState<string | null>(null);
+  const [imageLoading, setImageLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchNft() {
+    async function fetchNftImage() {
       try {
-        const res = await fetch(
-          `/api/nft?contractAddress=${DEMO_NFT.contractAddress}&tokenId=${DEMO_NFT.tokenId}`,
-        );
-        if (!res.ok) throw new Error("Failed to fetch NFT");
-        const data = await res.json();
-        setNftData(data);
+        const res = await fetch("/api/nft-game");
+        if (res.ok) {
+          const data: NftOfTheDayData = await res.json();
+
+          setNftImage(data.imageUrl);
+        }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error");
+        console.error("Error fetching NFT image:", err);
       } finally {
-        setIsLoading(false);
+        setImageLoading(false);
       }
     }
-    fetchNft();
+    fetchNftImage();
   }, []);
 
-  const handleReveal = () => {
-    if (revealState < 5) {
-      setRevealState((prev) => (prev + 1) as RevealState);
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="w-full max-w-md mx-auto">
-        <div className="aspect-square rounded-xl bg-gray-200 dark:bg-gray-800 animate-pulse" />
-      </div>
-    );
-  }
-
-  if (error || !nftData) {
-    return (
-      <div className="text-center text-red-500">
-        Failed to load NFT: {error}
-      </div>
-    );
+  if (isLoading || imageLoading) {
+    return <GameSkeleton />;
   }
 
   return (
@@ -71,32 +48,54 @@ export default function NftOfTheDay() {
         </p>
       </div>
 
-      <div className="w-full max-w-md">
-        <NftSplashView imageUrl={nftData.image} revealState={revealState} />
-      </div>
-
-      {revealState < 5 && (
-        <button
-          onClick={handleReveal}
-          className="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white font-medium rounded-xl transition-colors"
-        >
-          Reveal More ({5 - revealState} left)
-        </button>
+      {nftImage && (
+        <div className="w-full max-w-md">
+          <NftSplashView
+            imageUrl={nftImage}
+            guessCount={guesses.length}
+            isRevealed={isWon}
+          />
+        </div>
       )}
 
-      {revealState === 5 && (
-        <div className="text-center space-y-2">
-          <div className="text-2xl font-bold text-foreground">
-            {nftData.collectionName}
+      {isWon && (
+        <div className="w-full max-w-md mx-auto bg-green-500/10 border-2 border-green-500 rounded-xl p-4 text-center">
+          <div className="text-2xl mb-2">🎉</div>
+          <div className="font-bold text-green-700 dark:text-green-400">
+            Congratulations!
           </div>
-          <div className="flex flex-wrap gap-2 justify-center">
-            {nftData.traits.slice(0, 5).map((trait, i) => (
-              <span
-                key={i}
-                className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-800 rounded-full"
+          <div className="text-sm text-green-600 dark:text-green-500">
+            You guessed {winnerName} in {guesses.length}{" "}
+            {guesses.length === 1 ? "try" : "tries"}!
+          </div>
+        </div>
+      )}
+
+      {!isWon && (
+        <NftSearch
+          onGuess={handleGuess}
+          guessedIds={guesses.map((guess) => guess.nft.id)}
+          disabled={isSubmitting}
+        />
+      )}
+
+      {/* Guess history */}
+      {guesses.length > 0 && (
+        <div className="w-full max-w-md space-y-2">
+          <h3 className="text-sm font-medium text-gray-500">Your Guesses:</h3>
+          <div className="space-y-2">
+            {guesses.map((guess, index) => (
+              <div
+                key={index}
+                className={`p-3 rounded-lg border ${
+                  guess.isCorrect
+                    ? "bg-green-500/10 border-green-500"
+                    : "bg-red-500/10 border-red-500/50"
+                }`}
               >
-                {trait.trait_type}: {trait.value}
-              </span>
+                <span className="font-medium">{guess.nft.name}</span>
+                {guess.isCorrect && <span className="ml-2">✓</span>}
+              </div>
             ))}
           </div>
         </div>

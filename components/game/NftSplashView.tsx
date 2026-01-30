@@ -2,48 +2,47 @@
 
 import { motion } from "framer-motion";
 
-export type RevealState = 1 | 2 | 3 | 4 | 5;
-
 interface NftSplashViewProps {
   imageUrl: string;
-  revealState: RevealState;
+  guessCount: number;
+  isRevealed?: boolean;
   className?: string;
 }
 
-const REVEAL_STATES = {
-  1: {
-    backgroundSize: "400%",
-    backgroundPosition: "25% 25%",
-    filter: "blur(0px)",
-  },
-  2: {
-    backgroundSize: "250%",
-    backgroundPosition: "75% 50%",
-    filter: "blur(0px)",
-  },
-  3: {
-    backgroundSize: "150%",
-    backgroundPosition: "50% 50%",
-    filter: "blur(0px)",
-  },
-  4: {
-    backgroundSize: "100%",
-    backgroundPosition: "50% 50%",
-    filter: "blur(10px)",
-  },
-  5: {
-    backgroundSize: "100%",
-    backgroundPosition: "50% 50%",
-    filter: "blur(0px)",
-  },
-};
+/**
+ * Calculate zoom level based on guess count
+ * Starts at 400%, decreases by 50% per guess, min 100%
+ */
+function calculateZoomLevel(guessCount: number, isRevealed: boolean): number {
+  if (isRevealed) return 100;
+  return Math.max(100, 400 - guessCount * 50);
+}
+
+/**
+ * Get background position based on guess count for variety
+ */
+function getBackgroundPosition(guessCount: number): string {
+  const positions = [
+    "25% 25%",
+    "75% 25%",
+    "50% 50%",
+    "25% 75%",
+    "75% 75%",
+    "50% 25%",
+    "50% 75%",
+  ];
+  return positions[guessCount % positions.length];
+}
 
 export default function NftSplashView({
   imageUrl,
-  revealState,
+  guessCount,
+  isRevealed = false,
   className = "",
 }: NftSplashViewProps) {
-  const currentState = REVEAL_STATES[revealState];
+  const zoomLevel = calculateZoomLevel(guessCount, isRevealed);
+  const position = isRevealed ? "50% 50%" : getBackgroundPosition(guessCount);
+  const blur = zoomLevel === 100 && !isRevealed ? 10 : 0;
 
   return (
     <div
@@ -53,9 +52,9 @@ export default function NftSplashView({
         className="absolute inset-0 bg-cover bg-no-repeat"
         style={{ backgroundImage: `url(${imageUrl})` }}
         animate={{
-          backgroundSize: currentState.backgroundSize,
-          backgroundPosition: currentState.backgroundPosition,
-          filter: currentState.filter,
+          backgroundSize: `${zoomLevel}%`,
+          backgroundPosition: position,
+          filter: `blur(${blur}px)`,
         }}
         transition={{
           type: "spring",

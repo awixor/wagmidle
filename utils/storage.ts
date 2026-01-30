@@ -111,3 +111,55 @@ export function saveTokenProgress(
 
   localStorage.setItem(TOKEN_STORAGE_KEY, JSON.stringify(progress));
 }
+
+// NFT progress functions
+const NFT_STORAGE_KEY = "wagmidle-nft-progress";
+
+import { NftGuessResult } from "@/types/GameState";
+
+interface SavedNftProgress {
+  date: string;
+  guesses: NftGuessResult[];
+  isWon: boolean;
+}
+
+export function loadNftProgress(): SavedNftProgress | null {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const saved = localStorage.getItem(NFT_STORAGE_KEY);
+
+    if (!saved) return null;
+
+    const progress: SavedNftProgress = JSON.parse(saved);
+
+    if (progress.date !== getTodayDateString()) {
+      localStorage.removeItem(NFT_STORAGE_KEY);
+      return null;
+    }
+
+    progress.guesses = progress.guesses.map((guess) => ({
+      ...guess,
+      timestamp: new Date(guess.timestamp),
+    }));
+
+    return progress;
+  } catch {
+    return null;
+  }
+}
+
+export function saveNftProgress(
+  guesses: NftGuessResult[],
+  isWon: boolean,
+): void {
+  if (typeof window === "undefined") return;
+
+  const progress: SavedNftProgress = {
+    date: getTodayDateString(),
+    guesses,
+    isWon,
+  };
+
+  localStorage.setItem(NFT_STORAGE_KEY, JSON.stringify(progress));
+}

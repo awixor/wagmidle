@@ -7,6 +7,16 @@ export interface GuessResult {
   timestamp: Date;
 }
 
+export interface NftGuessResult {
+  nft: {
+    id: string;
+    name: string;
+    imageUrl: string;
+  };
+  isCorrect: boolean;
+  timestamp: Date;
+}
+
 export interface GameState {
   guesses: GuessResult[];
   isComplete: boolean;
