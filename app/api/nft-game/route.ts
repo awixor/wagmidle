@@ -1,24 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getNftOfTheDay, getNftById } from "@/data/nfts.server";
+import { getNftOfTheDay } from "@/utils/nftOfTheDay";
+import { nftCollections } from "@/data/nft-collections";
+import { NftCollection } from "@/types/Nft";
 
 export async function POST(request: NextRequest) {
   try {
-    const { nftId } = await request.json();
+    const { collectionId } = await request.json();
 
-    if (!nftId) {
-      return NextResponse.json({ error: "Missing nftId" }, { status: 400 });
+    if (!collectionId) {
+      return NextResponse.json(
+        { error: "Missing collectionId" },
+        { status: 400 },
+      );
     }
 
-    const guessedNft = getNftById(nftId);
-    if (!guessedNft) {
-      return NextResponse.json({ error: "NFT not found" }, { status: 404 });
+    const guessedCollection = nftCollections.find((c) => c.id === collectionId);
+    if (!guessedCollection) {
+      return NextResponse.json(
+        { error: "Collection not found" },
+        { status: 404 },
+      );
     }
 
     const targetNft = getNftOfTheDay();
-    const isCorrect = guessedNft.id === targetNft.id;
+    const isCorrect = targetNft.collectionName === guessedCollection.name;
+
+    const nftCollection: NftCollection = {
+      id: guessedCollection.id,
+      name: guessedCollection.name,
+      imageUrl: guessedCollection.imageUrl,
+    };
 
     return NextResponse.json({
-      guessedNft,
+      nftCollection,
       isCorrect,
     });
   } catch (error) {

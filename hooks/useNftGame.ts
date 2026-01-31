@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Nft } from "@/types/Nft";
 import { NftGuessResult } from "@/types/GameState";
 import { saveNftProgress, loadNftProgress } from "@/utils/storage";
+import { NftCollection } from "@/types/Nft";
 
 interface NftGuessApiResponse {
-  guessedNft: Nft;
+  nftCollection: NftCollection;
   isCorrect: boolean;
 }
 
@@ -58,7 +58,7 @@ export function useNftGame() {
         const response = await fetch("/api/nft-game", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nftId }),
+          body: JSON.stringify({ collectionId: nftId }),
         });
 
         if (!response.ok) {
@@ -69,7 +69,7 @@ export function useNftGame() {
         const data: NftGuessApiResponse = await response.json();
 
         const guessResult: NftGuessResult = {
-          nft: data.guessedNft,
+          nft: data.nftCollection,
           isCorrect: data.isCorrect,
           timestamp: new Date(),
         };

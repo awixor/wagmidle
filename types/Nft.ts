@@ -5,16 +5,28 @@ export interface Nft {
   id: string;
   name: string;
   contractAddress: string;
-  chain: "ethereum" | "polygon" | "solana" | "base" | "arbitrum";
+  chain:
+    | "ethereum"
+    | "polygon"
+    | "solana"
+    | "base"
+    | "arbitrum"
+    | "ronin"
+    | "abstract"
+    | "monad"
+    | "ink"
+    | "hyperevm"
+    | "ape_chain";
   category: "pfp" | "art" | "gaming" | "collectibles" | "utility";
+  collectionName: string;
   launchYear: number;
   imageUrl: string;
 }
 
 /**
- * Public NFT type for client-side search
+ * NFT collection type for client-side search
  */
-export interface PublicNft {
+export interface NftCollection {
   id: string;
   name: string;
   imageUrl: string;

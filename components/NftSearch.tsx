@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Search, Command } from "lucide-react";
-import { PublicNft } from "@/types/Nft";
-import { publicNfts } from "@/data/nfts";
+import { nftCollections } from "@/data/nft-collections";
 import CommandPalette from "@/components/ui/CommandPalette";
 import SearchInput from "@/components/ui/SearchInput";
 import KeyboardHints from "@/components/ui/KeyboardHints";
@@ -26,10 +25,10 @@ export default function NftSearch({
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const filteredNfts = publicNfts.filter(
-    (nft) =>
-      !guessedIds.includes(nft.id) &&
-      nft.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filteredCollections = nftCollections.filter(
+    (collection) =>
+      !guessedIds.includes(collection.id) &&
+      collection.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   useEffect(() => {
@@ -54,10 +53,10 @@ export default function NftSearch({
     }
   }, [isOpen]);
 
-  const handleSelect = (nft: PublicNft) => {
+  const handleSelect = (collection: (typeof nftCollections)[0]) => {
     if (!disabled) {
       if (onGuess) {
-        onGuess(nft.id);
+        onGuess(collection.id);
       }
       setIsOpen(false);
       setSearchQuery("");
@@ -69,14 +68,14 @@ export default function NftSearch({
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setSelectedIndex((prev) =>
-        prev < filteredNfts.length - 1 ? prev + 1 : prev,
+        prev < filteredCollections.length - 1 ? prev + 1 : prev,
       );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setSelectedIndex((prev) => (prev > 0 ? prev - 1 : 0));
-    } else if (e.key === "Enter" && filteredNfts[selectedIndex]) {
+    } else if (e.key === "Enter" && filteredCollections[selectedIndex]) {
       e.preventDefault();
-      handleSelect(filteredNfts[selectedIndex]);
+      handleSelect(filteredCollections[selectedIndex]);
     }
   };
 
@@ -123,12 +122,12 @@ export default function NftSearch({
           ref={listRef}
           className="max-h-100 overflow-y-auto scrollbar-thin scrollbar-thumb-purple-500/30 scrollbar-track-transparent"
         >
-          {filteredNfts.length > 0 ? (
+          {filteredCollections.length > 0 ? (
             <div className="p-2">
-              {filteredNfts.slice(0, 20).map((nft, index) => (
+              {filteredCollections.slice(0, 20).map((collection, index) => (
                 <button
-                  key={nft.id}
-                  onClick={() => handleSelect(nft)}
+                  key={collection.id}
+                  onClick={() => handleSelect(collection)}
                   onMouseEnter={() => setSelectedIndex(index)}
                   disabled={disabled}
                   className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all cursor-pointer ${
@@ -138,10 +137,10 @@ export default function NftSearch({
                   } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-gray-800 flex items-center justify-center">
-                    {nft.imageUrl ? (
+                    {collection.imageUrl ? (
                       <Image
-                        src={nft.imageUrl}
-                        alt={nft.name}
+                        src={collection.imageUrl}
+                        alt={collection.name}
                         width={40}
                         height={40}
                         className="w-full h-full object-cover"
@@ -153,7 +152,7 @@ export default function NftSearch({
                     )}
                   </div>
                   <div className="flex-1 text-left">
-                    <div className="font-medium">{nft.name}</div>
+                    <div className="font-medium">{collection.name}</div>
                   </div>
                 </button>
               ))}

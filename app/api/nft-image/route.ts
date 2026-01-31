@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getNftOfTheDay } from "@/data/nfts.server";
+import { getNftOfTheDay } from "@/utils/nftOfTheDay";
 import sharp from "sharp";
 
 const OUTPUT_SIZE = 400;
