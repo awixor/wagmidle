@@ -1,12 +1,16 @@
 # Wagmidle
 
-Daily crypto guessing games. Test your knowledge of the crypto ecosystem by guessing the daily crypto figure!
+Daily crypto guessing games. Test your knowledge of the crypto ecosystem with three unique game modes—guess the daily crypto figure, token, or NFT collection!
 
 ## Features
 
-- **Daily Character Guess**: A new crypto figure to guess every day.
-- **Visual Clues**: Uses pixelated or obscured images to challenge players.
-- **Stats & History**: Track your guessing streak and past performance.
+- **🎭 Character Game**: Guess the crypto personality of the day based on attribute clues.
+- **🪙 Token Game**: Identify the mystery token using hints about network, category, and market cap.
+- **🖼️ NFT Game**: Recognize the NFT collection from progressively revealed images.
+- **📊 Stats & History**: Track your guessing streaks and past performance.
+- **🔄 Daily Refresh**: New challenges every day at midnight UTC.
+
+📖 **[View Game Rules](./docs/game-rules.md)**
 
 ## Tech Stack
 
