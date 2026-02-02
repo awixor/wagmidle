@@ -1,5 +1,6 @@
 import { NftGuessResult } from "@/types/GameState";
 import NftGuessCard from "./NftGuessCard";
+import GuessHistoryHeader from "./GuessHistoryHeader";
 
 interface NftGuessHistoryProps {
   guesses: NftGuessResult[];
@@ -19,23 +20,12 @@ export default function NftGuessHistory({ guesses }: NftGuessHistoryProps) {
   const reversedGuesses = [...guesses].reverse();
 
   return (
-    <div className="w-full max-w-md">
-      <div className="relative mb-6">
-        <div className="absolute -left-1 top-0 bottom-0 w-1 bg-linear-to-b from-purple-500 via-pink-500 to-orange-400 rounded-full" />
-        <div className="flex items-center justify-between pl-4">
-          <div>
-            <h2 className="text-xl font-bold text-foreground tracking-tight">
-              Your Guesses
-            </h2>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Find the NFT of the day
-            </p>
-          </div>
-          <span className="px-4 py-1.5 rounded-full bg-linear-to-r from-gray-800 to-gray-900 text-gray-200 text-sm font-semibold border border-gray-700/50 shadow-inner">
-            {guesses.length} {guesses.length === 1 ? "attempt" : "attempts"}
-          </span>
-        </div>
-      </div>
+    <div className="w-full space-y-4">
+      <GuessHistoryHeader
+        title="Your Guesses"
+        subtitle="Find the NFT of the day"
+        count={guesses.length}
+      />
 
       <div className="space-y-3 relative">
         <div className="absolute inset-0 bg-linear-to-b from-white/2 to-transparent rounded-2xl pointer-events-none" />

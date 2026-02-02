@@ -1,5 +1,6 @@
 import { TokenGuessResult } from "@/utils/storage";
 import TokenGuessCard from "./TokenGuessCard";
+import GuessHistoryHeader from "./GuessHistoryHeader";
 
 interface TokenGuessHistoryProps {
   guesses: TokenGuessResult[];
@@ -24,11 +25,14 @@ export default function TokenGuessHistory({ guesses }: TokenGuessHistoryProps) {
 
   return (
     <div className="w-full space-y-4">
-      <h2 className="text-xl font-semibold text-foreground mb-4">
-        Your Guesses ({guesses.length})
-      </h2>
+      <GuessHistoryHeader
+        title="Your Guesses"
+        subtitle="Find the token of the day"
+        count={guesses.length}
+      />
 
-      <div className="space-y-3">
+      <div className="space-y-3 relative">
+        <div className="absolute inset-0 bg-linear-to-b from-white/2 to-transparent rounded-2xl pointer-events-none" />
         {reversedGuesses.map((guess, index) => {
           const originalIndex = guesses.length - 1 - index;
           const isNew = isLastGuessNew && originalIndex === lastGuessIndex;
