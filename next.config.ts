@@ -3,7 +3,20 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    domains: ["unavatar.io", "cryptologos.cc", "i2c.seadn.io"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "unavatar.io",
+      },
+      {
+        protocol: "https",
+        hostname: "cryptologos.cc",
+      },
+      {
+        protocol: "https",
+        hostname: "i2c.seadn.io",
+      },
+    ],
   },
 };
 
